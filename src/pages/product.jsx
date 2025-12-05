@@ -3,13 +3,19 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import Button from 'react-bootstrap/Button';
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
+
 
 function Product() {
   const { id } = useParams();   
   const [produto, setProduto] = useState(null);
   const { addToCart } = useContext(CartContext);
+  const navigate = useNavigate();
+
+  function abrirCarrinho() {
+    navigate('/carrinho');
+  }
  
   useEffect(() => {
     async function fetchProduto() {
@@ -45,7 +51,10 @@ function Product() {
           <img src={produto.imagem} alt={produto.nome} className="produto-imagem" />
           <h1>{produto.nome}</h1>
           <p className="produto-preco">R$ {produto.preco}</p>
-          <Button variant="danger" onClick={() => {addToCart(produto)}}>Comprar</Button>
+          <p className="produto-qtd">Quantidade: {produto.quantidade_estoque}</p>
+          <Button variant="danger" onClick={() => {addToCart(produto)
+          abrirCarrinho();
+          }}>Comprar</Button>
         </div>
 
     </>

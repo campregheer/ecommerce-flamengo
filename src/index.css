@@ -491,7 +491,13 @@ code {
 	font-size: 2rem;
 	font-weight: 700;
 	color: var(--accent);
-	margin: 0 0 24px 0;
+	margin: 0 0 0;
+	grid-column: 2;
+}
+.produto-qtd {
+	font-size: 1.3rem;
+	font-weight: 300;
+	color: var(--muted);
 	grid-column: 2;
 }
 

@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export const CartContext = createContext();
 
@@ -21,12 +22,23 @@ export function CartProvider({ children }) {
       const existing = prev.find((item) => item.id === product.id);
 
       if (existing) {
+        if(existing.quantidade >= product.quantidade_estoque) {
+          toast.error("Quantidade máxima disponível no estoque atingida!");
+          return prev;
+        }
+
         return prev.map((item) =>
           item.id === product.id
             ? { ...item, quantidade: item.quantidade + 1 }
             : item
         );
       }
+
+        if(product.quantidade_estoque <= 0){
+          toast.error("Produto esgotado no estoque!");
+          return prev;
+        }
+      
 
       return [...prev, { ...product, quantidade: 1 }];
     });
@@ -37,15 +49,25 @@ export function CartProvider({ children }) {
   }
 
   function updateQuantity(id, newQty) {
-    if (newQty <= 0) {
-      removeFromCart(id);
-      return;
-    }
+setCart((prev) =>
+    prev.map((item) => {
+      if (item.id === id) {
 
-    setCart((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantidade: newQty } : item
-      )
+        // Impede quantidade acima do estoque do Firebase
+        if (newQty > item.quantidade_estoque) {
+          toast.error("Quantidade maior do que o estoque disponível.");
+          return item;
+        }
+
+        // Impede valores menores do que 1
+        if (newQty < 1) {
+          return item;
+        }
+
+        return { ...item, quantidade: newQty };
+      }
+      return item;
+    })
     );
   }
 
