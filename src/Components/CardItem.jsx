@@ -1,16 +1,23 @@
 ﻿import { useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
+import { ShoppingCart } from "lucide-react";
+import { CartContext } from "../context/CartContext";
+import { toast } from "react-toastify";
 
 
-function Card (props){
+
+function Card ({filtroTipo = null}){
     const navigate = useNavigate();
+    const { addToCart } = useContext(CartContext);
+    
 
     function abrirProduto(id) {
         navigate(`/produto/${id}`);
   }
+
 
     const [produtos, setProdutos] = useState([])
 
@@ -30,6 +37,12 @@ function Card (props){
     fetchProdutos();
   }, []);
 
+
+  const filteredProdutos = produtos.filter((item) => {
+    console.log(filtroTipo);
+    if (filtroTipo === null) return true; 
+    return item.tipo === filtroTipo;
+  });
   
 
   return (
@@ -37,7 +50,7 @@ function Card (props){
       {produtos.length === 0 && <p className="card-loading">Carregando...</p>}
 
       <div className="cards-container">
-        {produtos.map((item) => (
+        {filteredProdutos.map((item) => (
           <div 
             key={item.id} 
             className="card-item"
@@ -51,7 +64,16 @@ function Card (props){
                 {item.descricao && <p className="card-description">{item.descricao}</p>}
                 <div className="card-actions">
                     <Button variant="danger">Comprar</Button>
-                    <button className="card-btn card-btn--secondary">Favoritar</button>
+                    
+                    <Button variant="light" 
+                    onClick={(e) => { 
+                    e.stopPropagation();  
+                    addToCart(item);
+                    toast.success("Produto adicionado ao carrinho!");
+                   }
+                    }>
+                    <ShoppingCart/>
+                    </Button>
                 </div>
               </div>
           </div>
