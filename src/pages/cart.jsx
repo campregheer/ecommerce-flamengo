@@ -1,10 +1,17 @@
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 import Header from "../Components/header";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const { cart, removeFromCart, updateQuantity, total } =
     useContext(CartContext);
+
+    const navigate = useNavigate();
+
+    function handleCheckout () {
+      navigate('/checkout');
+    }
 
   return (
     <div>
@@ -65,7 +72,7 @@ function Cart() {
                   <span className="summary-value">R$ {total.toFixed(2)}</span>
                 </div>
               </div>
-              <button className="checkout-btn">Finalizar Compra</button>
+              <button className="checkout-btn" onClick={() => {handleCheckout()}}>Finalizar Compra</button>
             </div>
           </div>
         )}
