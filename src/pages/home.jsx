@@ -4,7 +4,6 @@ import { useState } from "react";
 
 
 function Home() {
-
   const [filtroTipo, setFiltroTipo] = useState(null)
 
   return (

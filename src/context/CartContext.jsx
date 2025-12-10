@@ -76,9 +76,15 @@ setCart((prev) =>
     0
   );
 
+function clearCart() {
+  setCart([]);
+  localStorage.removeItem("cart");
+}
+
+
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, updateQuantity, total }}
+      value={{ cart, addToCart, removeFromCart, updateQuantity, total, clearCart }}
     >
       {children}
     </CartContext.Provider>

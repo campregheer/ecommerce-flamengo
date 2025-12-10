@@ -18,7 +18,6 @@ function Card ({filtroTipo = null}){
         navigate(`/produto/${id}`);
   }
 
-
     const [produtos, setProdutos] = useState([])
 
     useEffect(() => {
