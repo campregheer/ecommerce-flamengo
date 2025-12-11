@@ -49,9 +49,6 @@ const Header = ({setFiltroTipo, filtroTipo}) => {
                   )}
                 </div>
             </div>
-        
-
-      
       </header>
   );
 };

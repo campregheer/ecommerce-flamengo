@@ -6,13 +6,13 @@ import { toast } from "react-toastify";
 
 import {
   doc,
-  getDoc,
   runTransaction,
   collection,
   addDoc,
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../firebase";
+import Swal from "sweetalert2";
 
 function Payment() {
   const { cart, total, clearCart } = useContext(CartContext);
@@ -33,6 +33,35 @@ function Payment() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  function confirmarPagamento() {
+  Swal.fire({
+    title: "Confirmar pagamento?",
+    text: "Você está prestes a finalizar sua compra.",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Confirmar",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      finalizarPagamento();
+    }
+  });
+}
+
+function finalizarPagamento() {
+  Swal.fire({
+    title: "Pagamento aprovado!",
+    text: "Obrigado pela sua compra.",
+    icon: "success",
+    confirmButtonText: "Fechar"
+  })
+  .then(() => {
+    navigate("/");
+  });
+}
+
   function validateForm() {
     if (!paymentMethods) {
       toast.error("Escolha um método de pagamento.");
@@ -52,7 +81,6 @@ function Payment() {
     return true;
   }
 
-  // Função principal: finalizar compra (simulada)
   async function handleSubmit(e) {
     e.preventDefault();
     if (!validateForm()) return;
@@ -84,7 +112,6 @@ function Payment() {
         }
       });
 
-      // 2) Criar documento de pedido (coleção "pedidos")
       const pedidosRef = collection(db, "pedidos");
       await addDoc(pedidosRef, {
         items: cart.map((i) => ({
@@ -100,14 +127,10 @@ function Payment() {
         createdAt: serverTimestamp(),
       });
 
-      // 3) Esvaziar carrinho local
       clearCart();
 
-      // 4) Feedback + redirecionamento
-      toast.success("Pagamento aprovado (simulado). Pedido realizado!");
-      navigate("/sucesso"); // crie a rota /sucesso com a página de confirmação
     } catch (err) {
-      // se a transaction lançou erro (ex: estoque insuficiente) trata aqui
+
       console.error(err);
       toast.error(err.message || "Erro ao processar o pedido.");
     }
@@ -241,7 +264,7 @@ function Payment() {
                     />
                   </div>
 
-                  <button type="submit" className="payment-submit-btn">
+                  <button type="submit" className="payment-submit-btn" onClick={ () => {confirmarPagamento()}}>
                     Finalizar Pagamento
                   </button>
                 </form>
