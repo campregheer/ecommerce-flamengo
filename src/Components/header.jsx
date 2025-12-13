@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 
 
 const Header = ({setFiltroTipo, filtroTipo}) => {
-  const { user, loginWithGoogle, logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -14,6 +14,15 @@ const Header = ({setFiltroTipo, filtroTipo}) => {
   function abrirCarrinho() {
     navigate("/carrinho");
   };
+
+  function abrirPerfil() {
+    navigate("/perfil");
+  };
+
+  function cadastro() {
+    navigate("/cadastro");
+  };
+
 
 
   return (
@@ -28,6 +37,7 @@ const Header = ({setFiltroTipo, filtroTipo}) => {
                     <a className="nav-link" onClick={() => {setFiltroTipo(null)}} style={{ fontWeight: filtroTipo === null ? "700" : "400", color:"#e03b3b"}}>Todas</a>
                     <a className="nav-link" onClick={() => {setFiltroTipo(1)}} style={{ fontWeight: filtroTipo === 1 ? "700" : "400", color:"#e03b3b" }}>Camisas</a>
                     <a className="nav-link" onClick={() => {setFiltroTipo(2)} } style={{ fontWeight: filtroTipo === 2 ? "700" : "400", color:"#e03b3b" }}>Acessórios</a>
+                    <a className="nav-link" onClick={() => {cadastro()}} style={{color:"#e03b3b"}}>Cadastrar Produto</a>
                   </nav>
 
                 )}
@@ -39,14 +49,15 @@ const Header = ({setFiltroTipo, filtroTipo}) => {
 
                   {user ? (
                     <>
-                      <img className="user-photo" src={user.photoURL} alt="Foto do usuário" />
-                      <Button onClick={logout} variant="outline-danger" className="logout-btn">Sair</Button>
+                      <img className="user-photo" src={user.photoURL} onClick={() => {abrirPerfil()}} alt="Foto do usuário" />
+                      <Button onClick={logout} variant="outline-danger" className="logout-btn">Sair</Button>                    
                     </>
                   ) : (
-                    <button onClick={loginWithGoogle} className="btn btn--ghost" aria-label="Login com Google">
+                    <button onClick={abrirPerfil} className="btn btn--ghost" aria-label="Login com Google">
                       <User />
                     </button>
                   )}
+
                 </div>
             </div>
       </header>

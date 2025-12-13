@@ -60,7 +60,6 @@ function Card ({filtroTipo = null}){
               <div className="card-content">
                 <h3 className="card-title">{item.nome}</h3>
                 <p className="card-price">R$ {item.preco}</p>
-                {item.descricao && <p className="card-description">{item.descricao}</p>}
                 <div className="card-actions">
                     <Button variant="danger">Comprar</Button>
                     
